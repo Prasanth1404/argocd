@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+
+metadata: 
+  name: vendure-sql-svc
+  namespace: vendure-ns
+
+spec:
+  ClusterIP: None
+  publishNotReadyAddresses: true
+  selector:
+    app: vendure-sql
+  ports:
+    - name: vendure-mysql
+      port: 3306
+      targetPort: 3306
+
+    - name: vendure-mysql-replication
+      port: 33061
+      targetPort: 33061

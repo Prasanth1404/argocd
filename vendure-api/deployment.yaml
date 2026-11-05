@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vendure-api-deploy
+  namespace: vendure-ns
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vendure-api
+
+  template:
+    metadata:
+      labels:
+        app: vendure-api
+
+    spec:
+      containers:
+        - name: vendure-api-cont
+          image: 948609688539.dkr.ecr.ap-south-1.amazonaws.com/vendure-api:latest
+          ports:
+            - containerPort: 3000

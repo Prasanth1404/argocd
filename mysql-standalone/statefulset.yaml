@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: StatefulSet
+
+metadata:
+  name: mysql-statefulset
+  namespace: vendure-ns
+
+spec:
+  serviceName: mysql-headless
+  replicas: 3
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      app: mysql-gr
+  template:
+    metadata:
+      labels:
+        app: mysql-gr
+    spec:
+      terminationGracePeriodSeconds: 120
+      initContainers:
+        - name: render-config
+          image: busybox:1.36
+          command: ["sh", "-ec"]
+          args:
+            - |
+              ORDINAL="${HOSTNAME##*-}"
+              SERVER_ID=$((100 + ORDINAL))
+              POD_DNS="${HOSTNAME}.mysql-headless.vendure-ns.svc.cluster.local"
+              sed -e "s/__SERVER_ID__/${SERVER_ID}/g" -e "s/__POD_DNS__/${POD_DNS}/g" /template/99-gr.cnf.template > /rendered/99-gr.cnf
+          volumeMounts:
+            - name: config-template
+              mountPath: /template
+            - name: rendered-config
+              mountPath: /rendered
+      containers:
+        - name: mysql-cont
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: vendure-sql-scret
+                  key: MYSQL_ROOT_USER
+
+            - name: MYSQL_ROOT_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: vendure-sql-secret
+                  key: MYSQL_ROOT_HOST
+
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: vendure-sql-secret
+                  key: MYSQL_ROOT_PASSWORD
+
+          ports:
+            - name: mysql
+              containerPort: 3306
+            - name: gr
+              containerPort: 33061
+
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mysqladmin ping -uroot -p"$MYSQL_ROOT_PASSWORD" --silent
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mysqladmin ping -uroot -p"$MYSQL_ROOT_PASSWORD" --silent
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mysqladmin ping -uroot -p"$MYSQL_ROOT_PASSWORD" --silent
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          
+          
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              memory: 4Gi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+            - name: rendered-config
+              mountPath: /etc/mysql/conf.d/99-gr.cnf
+              subPath: 99-gr.cnf
+      volumes:
+        - name: config-template
+          configMap:
+            name: mysql-gr-config
+        - name: rendered-config
+          emptyDir: {}
+  
+  
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: vendure-sc
+        resources:
+          requests:
+            storage: 8Gi

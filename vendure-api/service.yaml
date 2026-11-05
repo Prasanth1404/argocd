@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vendure-api-svc
+  namespace: vendure-ns
+
+spec:
+  type: ClusterIP
+  selector:
+    app: vendure-api
+  ports:
+    - port: 80
+      targetPort: 3000

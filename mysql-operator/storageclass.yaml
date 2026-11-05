@@ -1,0 +1,16 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+
+metadata:
+  name: vendure-sc
+
+spec:
+  provisioner: ebs.csi.aws.com
+  volumeBindingModes: WaitForFirstConsumer
+  allowVolumeExpansion: true
+  reclaim: Retain
+  parameters:
+    type: gp3
+    encryption: "true"
+    iops: "3000"
+    throughput: "125"

@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata: 
+  name: vendure-phpmyadmin
+  namespace: vendure-ns
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vendure-php-admin
+
+  template:
+    metadata:
+      labels:
+        app: vendure-php-admin
+
+    spec:
+      - containers:
+          name: vendure-php-adm-cont
+          image: phpmyadmin:5.2
+          ports:
+            - containerPorts: 80
+          env:
+            - name: PMA_HOST
+              value: vendure-mysql
+            - name: PMA_PORT
+              value: "3306"
+            - name: PMA_ABSOLUTE_URI
+              value: https://phpmyadmin.example.com/

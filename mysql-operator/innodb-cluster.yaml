@@ -1,0 +1,57 @@
+apiVersion: mysql.oracle.com/v2
+kind: InnoDBCluster
+
+metadata:
+  name: vendure-ino-db
+  namespace: vendure-ns
+
+spec:
+  secretName: vendure-sql-secret
+  tlsUseSelfSigned: true
+  instances: 3
+
+  router: 
+    instances: 2
+    routingOptions:
+      read_only_targets: read_replicas
+
+  version: "8.0"
+
+  datadirVolumeClaimTemplate:
+    storageClassName: vendure-sc
+    accessModes: 
+      - ReadWriteOnce
+    resources:
+      requests: 
+        storage: 8Gi
+
+  # Dedicated Read Replicas
+  readReplicas: 
+    - name: vendure-read
+      baseServeID: 2000
+      instances: 2
+      version: "8.0"
+
+      datadirVolumeClaimTemplate:
+        storageClass: vendure-sc
+        accessModes: 
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 8Gi
+
+      autoscaling:
+        minReplicas: 1
+        maxReplicas: 5
+
+        scaleUp:
+          cpuThreshold: 90
+          increment: 1
+          stabilizationSeconds: 60
+
+        scaleDown:
+          cpuThreshold: 30
+          decrement: 1
+          stabilizationSeconds: 300
+
+        evaluationIntervalSeconds: 30
