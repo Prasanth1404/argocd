@@ -21,7 +21,7 @@ spec:
           name: vendure-php-adm-cont
           image: phpmyadmin:5.2
           ports:
-            - containerPorts: 80
+            - containerPort: 80
           env:
             - name: PMA_HOST
               value: vendure-mysql

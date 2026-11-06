@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: vendure-api-ing
+  namespace: vendure-ns
+  annotations:
+    cert-manager.io/cluster.io: letsencrypt-prod
+    nginx.ingress.kubernetes,io/proxy-body-size: "20m"
+
+spec:
+  ingressClassName: nginx
+  tls: 
+    - hosts: [api.prasanth.space]
+      secretName: vendure-api-tls
+
+  rules:
+    - host: api.prasanth.space
+      http:
+        paths:
+          - path: /
+            pathType: prefix
+            backend:
+              service:
+                name: vendure-svc
+                port:
+                  number: 80
+
+

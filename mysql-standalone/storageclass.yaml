@@ -5,7 +5,7 @@ metadata:
   name: vendure-sc
 
 proviosioner: ebs.csi.aws.com
-volumeBindingMode: WaitForFirstConsumer
+volumeBindingModes: WaitForFirstConsumer
 allowVolumeExpanstion: true
 reclaimPolicy: Retain
 

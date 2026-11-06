@@ -4,13 +4,12 @@ kind: StorageClass
 metadata:
   name: vendure-sc
 
-spec:
-  provisioner: ebs.csi.aws.com
-  volumeBindingModes: WaitForFirstConsumer
-  allowVolumeExpansion: true
-  reclaim: Retain
-  parameters:
-    type: gp3
-    encryption: "true"
-    iops: "3000"
-    throughput: "125"
+provisioner: ebs.csi.aws.com
+volumeBindingModes: WaitForFirstConsumer
+allowVolumeExpansion: true
+reclaimPolicy: Retain
+parameters:
+  type: gp3
+  encrypted: "true"
+  iops: "3000"
+  throughput: "125"

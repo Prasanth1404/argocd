@@ -3,8 +3,9 @@ kind: Service
 
 metadata:
   name: vendure-php-svc
+  namespace: vendure-ns
 
-metadata:
+spec:
   type: ClusterIP
   selector:
     app: vendure-php-admin

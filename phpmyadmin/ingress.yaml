@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: vendure-php-admin-ing
+  namespace: vendure-ns
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [phpadm.prasanth.space] 
+      secretName: vendure-php-admin-tls
+
+  rules:
+    hosts: phpadm.prasanth.space
+    htpp:
+      - paths:
+          path: /
+          pathType: prefix
+          backend:
+            service:
+              name: vendure-php-svc
+              port:
+                number: 80
