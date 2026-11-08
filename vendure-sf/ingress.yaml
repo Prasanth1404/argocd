@@ -6,7 +6,6 @@ metadata:
   namespace: vendure-ns
   annotations:
     cert.manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kuberenets.io/proxy-body-size: "20m"
 
 spec:
   ingressClassName: nginx
@@ -19,7 +18,7 @@ spec:
       http:
         paths:
           - path: /
-            pathType: prefix
+            pathType: Prefix
             backend:
               service:
                 name: vendure-sf-svc

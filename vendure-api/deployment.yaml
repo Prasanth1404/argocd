@@ -19,5 +19,14 @@ spec:
       containers:
         - name: vendure-api-cont
           image: 948609688539.dkr.ecr.ap-south-1.amazonaws.com/vendure-api:latest
+          command: ["node", "dist/index.js"]
           ports:
             - containerPort: 3000
+
+          envFrom:
+            - secretsRef:
+                name: sealed-api-secret
+
+          readinessProbe: 
+            httpGet: { path: /health, port: 3000}
+            initialDelaySeconds: 20

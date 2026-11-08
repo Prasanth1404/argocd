@@ -6,6 +6,7 @@ metadata:
   namespace: vendure-ns
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/whitelist-source-range: "YOUR.PUBLIC.IP.ADDRESS/32"
 
 spec:
   ingressClassName: nginx
@@ -18,7 +19,7 @@ spec:
     htpp:
       - paths:
           path: /
-          pathType: prefix
+          pathType: Prefix
           backend:
             service:
               name: vendure-php-svc
