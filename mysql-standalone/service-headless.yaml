@@ -6,7 +6,7 @@ metadata:
   namespace: vendure-ns
 
 spec:
-  ClusterIP: None
+  clusterIP: None
   publishNotReadyAddresses: true
   selector:
     app: vendure-sql

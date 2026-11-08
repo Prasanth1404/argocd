@@ -2,7 +2,7 @@ apiVersion: mysql.oracle.com/v2
 kind: InnoDBCluster
 
 metadata:
-  name: vendure-ino-db
+  name: vendure-mysql
   namespace: vendure-ns
 
 spec:

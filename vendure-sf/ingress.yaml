@@ -5,7 +5,7 @@ metadata:
   name: vendure-sf-ing
   namespace: vendure-ns
   annotations:
-    cert.manager.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
 
 spec:
   ingressClassName: nginx
@@ -14,7 +14,7 @@ spec:
       secretName: vendure-sf-tls
 
   rules:
-    - hosts: sf.prasanth.space
+    - host: sf.prasanth.space
       http:
         paths:
           - path: /

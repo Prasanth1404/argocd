@@ -40,19 +40,19 @@ spec:
             - name: MYSQL_ROOT_USER
               valueFrom:
                 secretKeyRef:
-                  name: sealed-sql-secret
+                  name: vendure-sql-secret
                   key: MYSQL_ROOT_USER
 
             - name: MYSQL_ROOT_HOST
               valueFrom:
                 secretKeyRef:
-                  name: sealed-sql-secret
+                  name: vendure-sql-secret
                   key: MYSQL_ROOT_HOST
 
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: sealed-sql-secret
+                  name: vendure-sql-secret
                   key: MYSQL_ROOT_PASSWORD
 
           ports:

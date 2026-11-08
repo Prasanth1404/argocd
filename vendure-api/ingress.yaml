@@ -6,7 +6,7 @@ metadata:
   namespace: vendure-ns
   annotations:
     cert-manager.io/cluster.io: letsencrypt-prod
-    nginx.ingress.kubernetes,io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
 
 spec:
   ingressClassName: nginx
