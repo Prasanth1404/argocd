@@ -6,16 +6,16 @@ metadata:
   namespace: vendure-ns
 
 spec:
-  serviceName: mysql-headless
+  serviceName: vendure-sql-svc
   replicas: 3
   podManagementPolicy: Parallel
   selector:
     matchLabels:
-      app: mysql-gr
+      app: vendure-sql
   template:
     metadata:
       labels:
-        app: mysql-gr
+        app: vendure-sql
     spec:
       terminationGracePeriodSeconds: 120
       initContainers:
@@ -40,19 +40,19 @@ spec:
             - name: MYSQL_ROOT_USER
               valueFrom:
                 secretKeyRef:
-                  name: vendure-sql-scret
+                  name: sealed-sql-secret
                   key: MYSQL_ROOT_USER
 
             - name: MYSQL_ROOT_HOST
               valueFrom:
                 secretKeyRef:
-                  name: vendure-sql-secret
+                  name: sealed-sql-secret
                   key: MYSQL_ROOT_HOST
 
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: vendure-sql-secret
+                  name: sealed-sql-secret
                   key: MYSQL_ROOT_PASSWORD
 
           ports:

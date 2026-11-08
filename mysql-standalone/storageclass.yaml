@@ -13,4 +13,4 @@ parameter:
   type: gp3
   iops: "3000"
   encrypted: "true"
-  throughput: 125
+  throughput: "125"
