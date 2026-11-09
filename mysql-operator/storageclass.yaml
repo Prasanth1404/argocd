@@ -4,7 +4,7 @@ kind: StorageClass
 metadata:
   name: vendure-sc
 
-provisioner: ebs.csi.aws.com
+provisioner: ebs.csi.eks.amazonaws.com
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 reclaimPolicy: Retain
