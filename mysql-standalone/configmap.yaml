@@ -19,10 +19,10 @@ data:
 
     # Group Replication settings
     plugin_load_add=group_replication.so
-    group_replication_group_name="7a8b1c2d-3e4f-4a5b-9c6d-1e2f3a4b5c6d"
-    group_replication_start_on_boot=OFF
-    group_replication_bootstrap_group=OFF
-    group_replication_local_address="__POD_DNS__:33061"
-    group_replication_group_seeds="mysql-statefulset-0.vendure-sql-svc.vendure-ns.svc.cluster.local:33061,mysql-statefulset-1.vendure-sql-svc.vendure-ns.svc.cluster.local:33061,mysql-statefulset-2.vendure-sql-svc.vendure-ns.svc.cluster.local:33061"
-    group_replication_ip_allowlist="172.16.0.0/16"
-    group_replication_recovery_get_public_key=ON
+    loose-group_replication_group_name="7a8b1c2d-3e4f-4a5b-9c6d-1e2f3a4b5c6d"
+    loose-group_replication_start_on_boot=OFF
+    loose-group_replication_bootstrap_group=OFF
+    loose-group_replication_local_address="__POD_DNS__:33061"
+    loose-group_replication_group_seeds="mysql-statefulset-0.vendure-sql-svc.vendure-ns.svc.cluster.local:33061,mysql-statefulset-1.vendure-sql-svc.vendure-ns.svc.cluster.local:33061,mysql-statefulset-2.vendure-sql-svc.vendure-ns.svc.cluster.local:33061"
+    loose-group_replication_ip_allowlist="172.16.0.0/16"
+    loose-group_replication_recovery_get_public_key=ON

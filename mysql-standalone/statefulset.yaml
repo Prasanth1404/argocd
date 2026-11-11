@@ -26,7 +26,7 @@ spec:
             - |
               ORDINAL="${HOSTNAME##*-}"
               SERVER_ID=$((100 + ORDINAL))
-              POD_DNS="${HOSTNAME}.vendure-sql-svc.vendure-ns.svc.cluster.local"  # ✅
+              POD_DNS="${HOSTNAME}.vendure-sql-svc.vendure-ns.svc.cluster.local"
               sed -e "s/__SERVER_ID__/${SERVER_ID}/g" -e "s/__POD_DNS__/${POD_DNS}/g" /template/99-gr.cnf.template > /rendered/99-gr.cnf
           volumeMounts:
             - name: config-template
@@ -101,6 +101,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/mysql
+              subPath: mysql
             - name: rendered-config
               mountPath: /etc/mysql/conf.d/99-gr.cnf
               subPath: 99-gr.cnf
