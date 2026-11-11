@@ -15,13 +15,13 @@ spec:
       secretName: vendure-php-admin-tls
 
   rules:
-    host: phpadm.prasanth.space
-    http:
-      - paths:
-          path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: vendure-php-svc
-              port:
-                number: 80
+    - host: phpadm.prasanth.space
+      http:
+        - paths:
+            path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: vendure-php-svc
+                port:
+                  number: 80
