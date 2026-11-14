@@ -24,7 +24,7 @@ spec:
             - containerPort: 3000
 
           envFrom:
-            - secretsRef:
+            - secretRef:
                 name: vendure-secrets
 
           readinessProbe: 
