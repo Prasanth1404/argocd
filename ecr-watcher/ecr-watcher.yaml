@@ -59,3 +59,4 @@ spec:
                     echo "$DEPLOY running=$CUR latest=$NEW"
                     [ -n "$NEW" ] && [ "$NEW" != "None" ] && [ "$NEW" != "$CUR" ] && kubectl rollout restart deploy/$DEPLOY -n vendure-ns
                   done
+                  exit 0
