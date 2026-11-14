@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ecr-watcher
+  namespace: vendure-ns
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ecr-watcher
+  namespace: vendure-ns
+rules:
+  - apiGroups: ["", "apps"]
+    resources: ["pods", "deployments", "replicasets"]
+    verbs: ["get", "list", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ecr-watcher
+  namespace: vendure-ns
+subjects:
+  - kind: ServiceAccount
+    name: ecr-watcher
+    namespace: vendure-ns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ecr-watcher
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ecr-watcher
+  namespace: vendure-ns
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          serviceAccountName: ecr-watcher
+          restartPolicy: Never
+          containers:
+            - name: watcher
+              image: alpine/k8s:1.31.2
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  for item in vendure-api-deploy:vendure-api vendure-sf-dep:vendure-sf; do
+                    DEPLOY=${item%%:*}; APP=${item##*:}
+                    kubectl rollout status deploy/$DEPLOY -n vendure-ns --timeout=1s >/dev/null 2>&1 || continue
+                    NEW=$(aws ecr describe-images --region ap-south-1 --repository-name $APP --image-ids imageTag=latest --query 'imageDetails[0].imageDigest' --output text)
+                    CUR=$(kubectl get pods -n vendure-ns -l app=$APP -o jsonpath='{.items[0].status.containerStatuses[0].imageID}' | sed 's/.*@//')
+                    echo "$DEPLOY running=$CUR latest=$NEW"
+                    [ -n "$NEW" ] && [ "$NEW" != "None" ] && [ "$NEW" != "$CUR" ] && kubectl rollout restart deploy/$DEPLOY -n vendure-ns
+                  done
